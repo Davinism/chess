@@ -1,6 +1,7 @@
 require "colorize"
 require_relative "cursorable"
 require_relative "board"
+require_relative "game"
 
 class Display
   include Cursorable
@@ -10,6 +11,7 @@ class Display
     @game = game
     @cursor_pos = [0,0]
     @selected = false
+    @selected_pos = nil
   end
 
   def render
@@ -18,6 +20,8 @@ class Display
       row.each_index do |jdx|
         if [idx, jdx] == @cursor_pos
           print " #{@board[idx, jdx].to_s} ".colorize(:background => :red)
+        elsif @selected && @board[*@selected_pos].moves.include?([idx, jdx])
+          print " #{@board[idx, jdx].to_s} ".colorize(:background => :yellow)
         elsif (idx + jdx).even?
           print " #{@board[idx, jdx].to_s} ".colorize(:background => :light_blue)
         else
@@ -26,21 +30,5 @@ class Display
       end
       puts
     end
-  end
-
-end
-
-if __FILE__ == $PROGRAM_NAME
-  b = Board.new
-  b.make_starting_grid
-  d = Display.new(b, "game")
-
-  while true
-    system("clear")
-    8.times do
-      puts
-    end
-    d.render
-    d.get_input
   end
 end

@@ -67,7 +67,18 @@ module Cursorable
     when :ctrl_c
       exit 0
     when :return, :space
-      @selected = !@selected
+      @move_pos = @cursor_pos
+      @selected = true
+      if !@selected_pos.nil? && @board[*@selected_pos].moves.include?(@move_pos)
+        @board.move(@selected_pos, @move_pos)
+        @selected_pos = nil
+        @move_pos = nil
+        @selected = false
+      elsif @selected && @board[*@cursor_pos].color == @game.current_player.color
+        @selected_pos = @cursor_pos
+      else
+        @selected = false
+      end
       @cursor_pos
     when :left, :right, :up, :down
       update_pos(MOVES[key])

@@ -1,3 +1,7 @@
+require_relative "board"
+require_relative "player"
+require "display"
+
 class Game
   attr_reader :board
   attr_accessor :current_player, :previous_player
@@ -13,7 +17,6 @@ class Game
       @current_player.play_turn
       switch_players
     end
-    puts "#{@previous_player} WINS!"
   end
 
   def switch_players
@@ -22,5 +25,23 @@ class Game
 
   def won?
     @board.checkmate?
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+
+  b = Board.new
+  b.make_starting_grid
+  p1 = Player.new("Davin", :white)
+  p2 = Player.new("Kelly", :black)
+  g = Game.new(b, p1, p2)
+  d = Display.new(b, g)
+  while true
+    system("clear")
+    8.times do
+      puts
+    end
+    d.render
+    d.get_input
   end
 end
