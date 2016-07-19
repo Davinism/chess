@@ -9,6 +9,7 @@ class Display
     @board = board
     @game = game
     @cursor_pos = [0,0]
+    @selected = false
   end
 
   def render
@@ -16,11 +17,11 @@ class Display
       print " ".center(28)
       row.each_index do |jdx|
         if [idx, jdx] == @cursor_pos
-          print "   ".colorize(:background => :red)
+          print " #{@board[idx, jdx].to_s} ".colorize(:background => :red)
         elsif (idx + jdx).even?
-          print "   ".colorize(:background => :white)
+          print " #{@board[idx, jdx].to_s} ".colorize(:background => :light_blue)
         else
-          print "   ".colorize(:background => :black)
+          print " #{@board[idx, jdx].to_s} ".colorize(:background => :gray)
         end
       end
       puts
@@ -31,6 +32,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   b = Board.new
+  b.make_starting_grid
   d = Display.new(b, "game")
 
   while true
